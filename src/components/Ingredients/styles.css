@@ -1,0 +1,12 @@
+ul {
+  column-count: 2;
+  list-style-position: inside;
+  list-style-type: square;
+}
+
+@media screen and (min-width: 40rem) {
+  ul {
+    column-count: 1;
+    list-style: none;
+  }
+}
