@@ -1,0 +1,44 @@
+name: Run tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run tests
+        run: yarn test:ci
+      - name: Get coverage output
+        id: coverage
+        run: echo "value=$(jq -r '.total.lines.pct|tostring + "%"' coverage/coverage-summary.json)" >> $GITHUB_OUTPUT
+      - name: Update coverage badge JSON gist
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 6f7058e8183ebe812f33411c08a54011
+          filename: coverage-master.json
+          label: Coverage
+          message: ${{ steps.coverage.outputs.value }}
+          color: green
+          namedLogo: vitest
+          forceUpdate: true
+      - name: Upload coverage (optional)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage

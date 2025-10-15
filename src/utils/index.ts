@@ -7,7 +7,15 @@ export const mapIngredientsPreparationStringToArray = (input: string | null): st
   const normalized = input.replace(/\r\n/g, '\n').trim();
 
   // Helper to strip leading step numbering like "1.", "1)", "1 ", "STEP 1:" etc.
-  const stripLeadingNumber = (text: string) => text.replace(/^\s*(?:STEP\s*)?\d{1,3}[\)\.:\-]?\s*/i, '').trim();
+  // Strip leading numbering and common list bullets/punctuation.
+  // Handles: "1.", "1)", "STEP 1:", "3 -", "3 - ", bullets like "- item" or "• item".
+  const stripLeadingNumber = (text: string) =>
+    text
+      // remove leading STEP/number markers and any intervening punctuation/spaces
+      .replace(/^\s*(?:STEP\s*)?\d{1,3}(?:[\)\.\:\-]|(?:\s*[-–—•]\s*))*\s*/i, '')
+      // remove any leading bullets/dashes that remain
+      .replace(/^[\s\-–—•]+/, '')
+      .trim();
 
   // 1) If double line breaks present, split by them first (common in TheMealDB)
   if (/\n\s*\n/.test(normalized)) {
@@ -16,6 +24,27 @@ export const mapIngredientsPreparationStringToArray = (input: string | null): st
       const cleaned = parts.map((p) => stripLeadingNumber(p)).filter(Boolean);
       if (cleaned.length > 1) return cleaned;
     }
+  }
+
+  // 1b) STEP labels: use lookahead split (handle "STEP 1: ... STEP 2: ...")
+  if (/\bSTEP\s*\d{1,3}[\)\.:\-]?\s*/i.test(normalized)) {
+    const parts = normalized
+      .split(/(?=\bSTEP\s*\d{1,3}[\)\.:\-]?\s*)/i)
+      .map((p) => p.trim())
+      .filter(Boolean)
+      .map((p) => p.replace(/^\s*STEP\s*\d{1,3}[\)\.:\-]?\s*/i, '').trim());
+    if (parts.length > 1) return parts;
+  }
+
+  // 1c) Inline numbered steps: split by number markers using lookahead (handles "1 Preheat... 2 Mix...")
+  // Avoid matching patterns that begin with STEP (already handled above)
+  if (/\b\d{1,3}[\)\.:\-]?\s+[A-Z]/.test(normalized)) {
+    const parts = normalized
+      .split(/(?=\b\d{1,3}[\)\.:\-]?\s+)/)
+      .map((p) => p.trim())
+      .filter(Boolean)
+      .map((p) => stripLeadingNumber(p));
+    if (parts.length > 1) return parts;
   }
 
   // 2) Detect numbered steps anywhere and extract by positions (handles 1..9, 10, 11 etc.)
@@ -35,19 +64,20 @@ export const mapIngredientsPreparationStringToArray = (input: string | null): st
   }
 
   // 3) STEP labels without double-newline but multiple occurrences
-  const stepLabelMarker = /(^|\n)\s*STEP\s*\d{1,3}[\)\.:\-]?\s*/gi;
-  const stepLabelMatches = Array.from(normalized.matchAll(stepLabelMarker));
-  if (stepLabelMatches.length > 1) {
-    const positions = stepLabelMatches.map((m) => m.index as number).sort((a, b) => a - b);
-    const steps: string[] = [];
-    for (let i = 0; i < positions.length; i++) {
-      const start = positions[i];
-      const end = i + 1 < positions.length ? positions[i + 1] : normalized.length;
-      let chunk = normalized.slice(start, end).trim();
-      chunk = chunk.replace(/^\s*STEP\s*\d{1,3}[\)\.:\-]?\s*/i, '').trim();
-      if (chunk) steps.push(chunk);
-    }
-    if (steps.length > 1) return steps;
+  // 3) STEP labels: use lookahead split
+  if (/\bSTEP\s*\d{1,3}[\)\.:\-]?\s*/i.test(normalized)) {
+    const parts = normalized
+      .split(/(?=\bSTEP\s*\d{1,3}[\)\.:\-]?\s*)/i)
+      .map((p) => p.trim())
+      .filter(Boolean)
+      .map((p) => p.replace(/^\s*STEP\s*\d{1,3}[\)\.:\-]?\s*/i, '').trim());
+    if (parts.length > 1) return parts;
+  }
+
+  // 3b) Semicolon-separated steps
+  if (normalized.includes(';')) {
+    const parts = normalized.split(/;\s*/).map((p) => p.trim()).filter(Boolean);
+    if (parts.length > 1) return parts;
   }
 
   // 4) Fallbacks: try splits by single newline, then by sentence boundary

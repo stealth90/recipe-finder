@@ -1,8 +1,15 @@
-# Recipe Finder
+<h1 align="center">Recipe Finder</h1>
 
-Recipe Finder is a small React + Vite + TypeScript application that searches recipes using TheMealDB API and displays recipe lists and detailed recipe pages (ingredients, preparation steps, tags, video link, etc.). The project uses Tailwind CSS for styling and vite-plugin-svgr to import SVGs as React components.
+<h4 align="center">Recipe Finder is a small React + Vite + TypeScript application that searches recipes using TheMealDB API and displays recipe lists and detailed recipe pages</h4>
 
----
+
+
+  <div align="center">
+    <img src="https://github.com/yuriyyakym/awai/actions/workflows/tests.yml/badge.svg" />
+    <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/stealth90/6f7058e8183ebe812f33411c08a54011/raw/coverage-master.json" alt="Coverage" />
+    <img src="https://img.shields.io/badge/Stability-experimental-blue.svg" />
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" />
+  </div>
 
 ## Table of Contents
 

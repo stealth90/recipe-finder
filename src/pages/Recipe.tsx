@@ -107,7 +107,7 @@ const Recipe = () => {
     const tags = recipe.strTags ? recipe.strTags.split(',') : [];
 
     return (
-      <article
+      <div
         className="flex flex-wrap justify-center overflow-scroll"
         ref={mainContentRef}
         tabIndex={-1}
@@ -176,7 +176,7 @@ const Recipe = () => {
             />
           </div>
         </div>
-      </article>
+      </div>
     );
   };
   return <div>{renderContent()}</div>;
