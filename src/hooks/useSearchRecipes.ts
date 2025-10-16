@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import TheMealDB from '../services/TheMealDBService';
 import type { Meal } from '../types/TheMealDB';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const useSearchRecipes = () => {
   const navigate = useNavigate();

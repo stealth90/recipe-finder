@@ -26,7 +26,7 @@ const RecipeList = () => {
     }
 
     return (
-      <div className="flex flex-wrap gap-6 justify-center py-6 md:px-0 px-4 overflow-scroll">
+      <div className="flex flex-wrap gap-6 justify-center md:px-0 overflow-scroll">
         {recipes?.map((recipe) => (
           <Link to={`/recipes/${recipe.idMeal}`} key={recipe.idMeal}>
             <RecipeCard
@@ -44,8 +44,8 @@ const RecipeList = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 min-h-dvh py-4 px-5">
-      <div className="sticky top-0 z-10 p-2 bg-white">
+    <div className="flex flex-col gap-6">
+      <div className="sticky top-0 z-10">
         <SearchBar isDisabled={isLoading} onSearch={searchMeal} />
       </div>
       {renderAsyncContent()}

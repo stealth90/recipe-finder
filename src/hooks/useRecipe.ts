@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import TheMealDB from '../services/TheMealDBService';
 import type { Meal } from '../types/TheMealDB';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom';
+import useMealsStorage from './useMealsStorage';
 
 const useRecipe = () => {
   const params = useParams();
   const navigate = useNavigate();
+  const {getStoredMealById, saveMealToStorage } = useMealsStorage();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [recipe, setRecipe] = useState<Meal | null>(null);
@@ -16,9 +18,15 @@ const useRecipe = () => {
         navigate('/');
         return;
       }
+      const storedMeal = getStoredMealById(params.id);
+      if (storedMeal) {
+        setRecipe(storedMeal);
+        return;
+      }
       setIsLoading(true);
       try {
         const response = await TheMealDB.getMealById(params.id);
+        if (response) saveMealToStorage(response);
         setRecipe(response);
       } catch (error) {
         console.error('Error fetching recipe:', error);

@@ -2,10 +2,12 @@ import { createBrowserRouter } from 'react-router';
 import Home from './pages/Home';
 import RecipeList from './pages/RecipeList';
 import Recipe from './pages/Recipe';
+import MainLayout from './layouts/MainLayout';
 
 const router = createBrowserRouter([
   {
     path: '/',
+    Component: MainLayout,
     children: [
       { index: true, Component: Home },
       {

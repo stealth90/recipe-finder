@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import Spinner from './Spinner';
-import SearchIcon from '../assets/svg/search.svg?react';
+import Spinner from '../Spinner';
+import SearchIcon from '../../assets/svg/search.svg?react';
 
 interface SearchBarProps {
   isLoading?: boolean;
@@ -20,7 +20,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ isLoading, isDisabled, onChange, 
   };
 
   return (
-    <div className="bg-white  flex flex-col sm:flex-row items-center justify-center border py-2 px-2 rounded-2xl gap-4 shadow-2xl focus-within:border-gray-400 border-gray-200">
+    <div className="bg-white flex flex-col sm:flex-row items-center justify-center border py-2 px-2 rounded-2xl gap-4 shadow-2xl focus-within:border-gray-400 border-gray-200 flex-1 max-w-2xl mx-auto">
       <input
         id="search-bar"
         name="query"
