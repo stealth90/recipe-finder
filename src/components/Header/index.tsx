@@ -12,17 +12,17 @@ const Header: React.FC = () => {
         <Link to="/" className="text-xl font-bold">
           Recipe Finder
         </Link>
-        <a
-          href="https://www.themealdb.com"
-          target="_blank"
-          rel="noreferrer"
-          className="flex gap-2 items-center justify-center"
-        >
+        <div className="flex gap-2 items-center justify-center">
           <span className="text-gray-400 text-xs">Powered by</span>
-          <span className="bg-black/5 rounded-2xl p-1">
-            <TheMealDBLogo height={28} />
-          </span>
-        </a>
+          <a
+            href="https://www.themealdb.com"
+            target="_blank"
+            rel="noreferrer"
+            className="bg-black/5 rounded-2xl p-1"
+          >
+            <TheMealDBLogo height={28} width={140} />
+          </a>
+        </div>
       </nav>
     </header>
   );

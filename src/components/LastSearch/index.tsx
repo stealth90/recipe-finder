@@ -9,7 +9,7 @@ const LastSearch = () => {
   if (!storedMeals?.length) return null;
 
   return (
-    <div className="flex flex-col py-6 md:px-0 px-4">
+    <div className="flex flex-col">
       <h3 className="text-center text-lg font-medium">From your research</h3>
       <div className="flex flex-wrap gap-6 justify-center py-6 md:px-0 px-4">
         {storedMeals?.map((recipe) => (

@@ -6,7 +6,7 @@ const MainLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col gap-y-4">
       <Header />
-      <main className="max-w-6xl flex-1">
+      <main className='flex flex-1 justify-center'>
         <Outlet />
       </main>
     </div>
